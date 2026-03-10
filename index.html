@@ -13,11 +13,9 @@
     }
 
     body {
-      /* ✅ BACKGROUND ADDED (change bg.jpg to your image name) */
       background:
         linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35)),
         url('bg.jpg') no-repeat center center/cover;
-
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -264,33 +262,37 @@
   </style>
 </head>
 <body>
-  <div class="todo-container">
-    <h1>Smart To-Do List</h1>
+  <main class="todo-container">
+    <header>
+      <h1>Smart To-Do List</h1>
 
-    <div class="top-bar">
-      <button class="dark-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-      <button class="clear-btn" onclick="clearAllTasks()">Clear All Tasks</button>
-    </div>
+      <div class="top-bar">
+        <button class="dark-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        <button class="clear-btn" onclick="clearAllTasks()">Clear All Tasks</button>
+      </div>
+    </header>
 
-    <div class="input-grid">
-      <input type="text" id="taskInput" placeholder="Enter a task..." />
-      <input type="date" id="dueDate" />
-      <input type="time" id="dueTime" />
-      <select id="priority">
-        <option value="High">High Priority</option>
-        <option value="Medium" selected>Medium Priority</option>
-        <option value="Low">Low Priority</option>
-      </select>
-      <select id="category">
-        <option value="Study">Study</option>
-        <option value="Work">Work</option>
-        <option value="Personal" selected>Personal</option>
-        <option value="Shopping">Shopping</option>
-      </select>
-      <button class="add-btn" onclick="addTask()">Add</button>
-    </div>
+    <section>
+      <form class="input-grid" onsubmit="addTask(event)">
+        <input type="text" id="taskInput" placeholder="Enter a task..." />
+        <input type="date" id="dueDate" />
+        <input type="time" id="dueTime" />
+        <select id="priority">
+          <option value="High">High Priority</option>
+          <option value="Medium" selected>Medium Priority</option>
+          <option value="Low">Low Priority</option>
+        </select>
+        <select id="category">
+          <option value="Study">Study</option>
+          <option value="Work">Work</option>
+          <option value="Personal" selected>Personal</option>
+          <option value="Shopping">Shopping</option>
+        </select>
+        <button type="submit" class="add-btn">Add</button>
+      </form>
+    </section>
 
-    <div class="controls">
+    <section class="controls">
       <input type="text" id="searchInput" placeholder="Search tasks..." onkeyup="renderTasks()" />
       <select id="filterStatus" onchange="renderTasks()">
         <option value="All">All Tasks</option>
@@ -303,21 +305,23 @@
         <option value="Priority">Sort: Priority</option>
         <option value="Alphabetical">Sort: A-Z</option>
       </select>
-    </div>
+    </section>
 
-    <div class="stats">
+    <section class="stats">
       <p>Total: <span id="totalTasks">0</span></p>
       <p>Completed: <span id="completedTasks">0</span></p>
       <p>Pending: <span id="pendingTasks">0</span></p>
-    </div>
+    </section>
 
-    <div class="progress-container">
+    <section class="progress-container">
       <div class="progress-bar" id="progressBar">0%</div>
-    </div>
+    </section>
 
-    <ul id="taskList"></ul>
-    <p class="empty-message" id="emptyMessage">No tasks yet. Add one!</p>
-  </div>
+    <section>
+      <ul id="taskList"></ul>
+      <p class="empty-message" id="emptyMessage">No tasks yet. Add one!</p>
+    </section>
+  </main>
 
   <script>
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -332,10 +336,15 @@
     }
 
     function saveDarkMode() {
-      localStorage.setItem("darkMode", JSON.stringify(document.body.classList.contains("dark")));
+      localStorage.setItem(
+        "darkMode",
+        JSON.stringify(document.body.classList.contains("dark"))
+      );
     }
 
-    function addTask() {
+    function addTask(event) {
+      event.preventDefault();
+
       const taskInput = document.getElementById("taskInput");
       const dueDate = document.getElementById("dueDate").value;
       const dueTime = document.getElementById("dueTime").value;
@@ -361,9 +370,11 @@
 
       tasks.push(task);
       saveTasks();
+
       taskInput.value = "";
       document.getElementById("dueDate").value = "";
       document.getElementById("dueTime").value = "";
+
       renderTasks();
     }
 
@@ -383,6 +394,7 @@
         }
         return task;
       });
+
       saveTasks();
       renderTasks();
     }
@@ -394,6 +406,7 @@
       if (newText === null) return;
 
       const trimmedText = newText.trim();
+
       if (trimmedText === "") {
         alert("Task cannot be empty");
         return;
